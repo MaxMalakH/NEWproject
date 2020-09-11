@@ -1,26 +1,48 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './styles/App.css';
+import './styles/NavBar.css'
+import './'
+import {connect} from 'react-redux'
+import { Link, Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import Main from './Main'
+import Profile from './Profile'
+import Login from './Login'
+import Post from './Main/components/Post'
+import PostWithComment from './Main/components/PostWithComment'
+import SignUp from './SignUp'
+import Container from '@material-ui/core/Container'
+import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined'
+import MainContent from './MainContent'
+import NavBar from './NavBar'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  componentDidMount(){
+    if(this.props.isAuth ){
+      this.props.getNewPost();
+    }
+  }
+  render(){
+    return(
+      <div>
+        <NavBar />
+        <MainContent />
+      </div>
+    )
+  }
 }
+const mapDispatchToProps = dispatch => {
+  return {
+    getNewPost: () => dispatch({type:"GET_POST"}),
+    getNewComments: () => dispatch({
+      type:"GET_COMMENTS",
+    }),
 
-export default App;
+  }
+};
+const mapStateToProps = store => {
+  return {
+    isAuth: store.Authorization.isAuth,
+
+   }
+}
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(App));
